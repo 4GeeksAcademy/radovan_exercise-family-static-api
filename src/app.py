@@ -15,6 +15,23 @@ CORS(app)
 # create the jackson family object
 jackson_family = FamilyStructure("Jackson")
 
+jackson_family.add_member({
+    "first_name": "John",
+    "age": 33,
+    "lucky_numbers": [7, 13, 22]
+})
+
+jackson_family.add_member({
+    "first_name": "Jane",
+    "age": 35,
+    "lucky_numbers": [10, 14, 3]
+})
+
+jackson_family.add_member({
+    "first_name": "Jimmy",
+    "age": 5,
+    "lucky_numbers": [1]
+})
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
@@ -37,6 +54,47 @@ def handle_hello():
 
 
     return jsonify(response_body), 200
+
+@app.route('/member/<int:member_id>', methods=['GET'])
+def get_one_member(member_id):
+
+    # this is how you can use the Family datastructure by calling its methods
+    member = jackson_family.get_member(member_id)
+    if not member:
+        return jsonify({"error": "member not found"}), 400
+
+
+    return jsonify(member), 200
+
+@app.route('/member/<int:member_id>', methods=['DELETE'])
+def delete_one_member(member_id):
+
+    # this is how you can use the Family datastructure by calling its methods
+    member = jackson_family.delete_member(member_id)
+    if member["done"]== False:
+        return jsonify({"error": "member not found"}), 400
+
+
+    return jsonify(member), 200
+
+@app.route('/member', methods=['POST'])
+def add_new_member():
+    body= request.get_json()
+    first_name= body.get("first_name", None)
+    age= body.get("age", None)
+    lucky_numbers= body.get("lucky_numbers", None)
+    id= body.get("id", None)
+    if not first_name or not age or not lucky_numbers:
+        return jsonify({"error":"misssing fields"}), 400
+    # if id is not None 
+
+    # this is how you can use the Family datastructure by calling its methods
+    member = jackson_family.add_member(body)
+    
+        
+
+
+    return jsonify(member), 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
