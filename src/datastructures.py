@@ -13,13 +13,37 @@ class FamilyStructure:
         self.last_name = last_name
 
         # example list of members
-        self._members = []
+        self._members = [
+            {
+    "first_name": "John",
+    "age": 33,
+    "lucky_numbers": [7, 13, 22],
+    "id": self._generateId()
+},
+
+{
+    "first_name": "Jane",
+    "age": 35,
+    "lucky_numbers": [10, 14, 3],
+    "id": self._generateId()
+},
+
+{
+    "first_name": "Jimmy",
+    "age": 5,
+    "lucky_numbers": [1],
+    "id": self._generateId()
+}
+
+
+        ]
 
     # read-only: Use this method to generate random members ID's when adding members into the list
     def _generateId(self):
         return randint(0, 99999999)
 
     def add_member(self, member):
+        
         if "id" not in member:
             member["id"] = self._generateId()
         self._members.append(member)
